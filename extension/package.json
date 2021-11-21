@@ -1,0 +1,18 @@
+{
+  "name": "advanzia-assistant",
+  "version": "1.0.0",
+  "description": "A Chrome extension to enhance the Advanzia Bank Gebuehrenfrei Transaction UI using Rust and Typescript.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HamburgChimps/advanzia-assistant.git"
+  },
+  "author": "HamburgChimps",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HamburgChimps/advanzia-assistant/issues"
+  },
+  "homepage": "https://github.com/HamburgChimps/advanzia-assistant#readme",
+  "devDependencies": {
+    "typescript": "^4.5.2"
+  }
+}
