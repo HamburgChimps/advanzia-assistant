@@ -4,4 +4,4 @@ A Chrome extension to enhance the Advanzia Bank Gebuehrenfrei Transaction UI usi
 
 ## Developer Documentation
 
-In <./crate>
+In [./crate](./crate)
