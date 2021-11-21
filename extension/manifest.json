@@ -1,0 +1,7 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_ext_name",
+  "version": "1.0.0",
+  "default_locale": "de",
+  "description": "__MSG_ext_desc"
+}
