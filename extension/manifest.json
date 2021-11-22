@@ -3,5 +3,19 @@
   "name": "Advanzia Assistant",
   "version": "1.0.0",
   "default_locale": "de",
-  "description": "__MSG_extDesc__"
+  "description": "__MSG_extDesc__",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mein.gebuhrenfrei.com/retail-app*"
+      ],
+      "js": [
+        "content-script.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": {
+    "resources": ["extension.wasm"],
+    "matches": ["https://mein.gebuhrenfrei.com/retail-app*"]
+  }
 }
