@@ -6,8 +6,11 @@ A Chrome extension to enhance the Advanzia Bank Gebuehrenfrei Transaction UI usi
 
 In [./crate][0] you will find the Rust code that compiles to target [`wasm32-unknown-unknown`][1].
 
-In [./extension][2] you will find the chrome extension that uses the wasm binary produced by the Rust code in [./crate][0].
+In [./extension][2] you will find the chrome extension code that uses the wasm binary produced by the Rust code in [./crate][0].
+
+The compiled wasm binary and the relevant parts of [./extension][2] are packed in a `dist` directory in the root of the repository when you execute [`build.sh`][3]. This dist directory is the artifact that will be uploaded to the Chrome Web Store and which you can load as an unpacked extension into your local Chrome.
 
 [0]: <./crate>
 [1]: <https://www.hellorust.com/setup/wasm-target/>
 [2]: <./extension>
+[3]: <./build.sh>
