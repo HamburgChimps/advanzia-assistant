@@ -7,17 +7,17 @@
   "content_scripts": [
     {
       "matches": [
-        "https://mein.gebuhrenfrei.com/retail-app*"
+        "https://mein.gebuhrenfrei.com/*"
       ],
       "js": [
-        "content-script.js"
+        "advanzia-assistant.js"
       ]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["extension.wasm"],
-      "matches": ["https://mein.gebuhrenfrei.com/retail-app*"]
+      "resources": ["advanzia-assistant.wasm"],
+      "matches": ["https://mein.gebuhrenfrei.com/*"]
     }
   ]
 }

@@ -10,6 +10,15 @@ In [./extension][2] you will find the chrome extension code that uses the wasm b
 
 The compiled wasm binary and the relevant parts of [./extension][2] are packed in a `dist` directory in the root of the repository when you execute [`build.sh`][3]. This dist directory is the artifact that will be uploaded to the Chrome Web Store and which you can load as an unpacked extension into your local Chrome.
 
+### Build and test the extension locally
+
+1. Ensure you have rust & cargo installed.
+2. Ensure you have node and npm installed.
+3. Checkout this repository
+4. `cd extension/ && npm i`
+5. `cd .. && ./build.sh`
+6. Load the `dist` directory that is now present in the repository root into Chrome as an unpacked extension.
+
 [0]: <./crate>
 [1]: <https://www.hellorust.com/setup/wasm-target/>
 [2]: <./extension>
