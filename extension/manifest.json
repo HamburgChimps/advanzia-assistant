@@ -14,8 +14,10 @@
       ]
     }
   ],
-  "web_accessible_resources": {
-    "resources": ["extension.wasm"],
-    "matches": ["https://mein.gebuhrenfrei.com/retail-app*"]
-  }
+  "web_accessible_resources": [
+    {
+      "resources": ["extension.wasm"],
+      "matches": ["https://mein.gebuhrenfrei.com/retail-app*"]
+    }
+  ]
 }
