@@ -1,9 +1,9 @@
 module.exports = {
-    files: ['*.spec.ts'],
-    typescript: {
-        rewritePaths: {
-            './': 'transpiled/',
-        },
-        compile: 'tsc'
-    }
+  files: ['*.spec.ts'],
+  typescript: {
+    rewritePaths: {
+      './': 'transpiled/',
+    },
+    compile: 'tsc'
+  }
 };

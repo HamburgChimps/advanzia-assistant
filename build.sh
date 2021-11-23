@@ -15,7 +15,7 @@ cd extension
 
 rm -rf transpiled
 
-npx tsc
+npm run build
 
 # remove transpiled test files -> they are needed to run ava so we have typescript transpile them but they are not needed
 # to actually run the extension
