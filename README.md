@@ -12,12 +12,12 @@ The compiled wasm binary and the relevant parts of [./extension][2] are packed i
 
 ### Build and test the extension locally
 
-1. Ensure you have rust and cargo installed.
-2. Ensure you have node and npm installed.
+1. Ensure you have rust and cargo installed
+2. Ensure you have node and npm installed
 3. Checkout this repository
 4. `cd extension/ && npm i`
 5. `cd .. && ./build.sh`
-6. Load the `dist` directory that is now present in the repository root into Chrome as an unpacked extension.
+6. Load the `dist` directory that is now present in the repository root into Chrome as an unpacked extension
 
 [0]: <./crate>
 [1]: <https://www.hellorust.com/setup/wasm-target/>
