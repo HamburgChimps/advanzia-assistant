@@ -1,3 +1,3 @@
-export const wiringTest = (): number => 0;
+import { init } from './functions';
 
-console.log('i should show up on page');
+init();
