@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+  devtool: 'inline-source-map',
   entry: './content-script.ts',
   module: {
     rules: [
@@ -16,7 +17,7 @@ module.exports = {
   },
   output: {
     filename: 'content-script.js',
-    path: path.resolve(__dirname, 'transpiled'),
+    path: path.resolve(__dirname, 'dist'),
     clean: true
   },
 };

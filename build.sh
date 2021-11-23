@@ -17,15 +17,11 @@ rm -rf transpiled
 
 npm run build
 
-# remove transpiled test files -> they are needed to run ava so we have typescript transpile them but they are not needed
-# to actually run the extension
-rm transpiled/*.spec.js
-
 cd ..
 
 mkdir dist
 
 cp crate/target/wasm32-unknown-unknown/release/extension.wasm dist
 cp extension/manifest.json dist
-cp extension/transpiled/*.js dist
+cp extension/dist/*.js dist
 cp -r extension/_locales dist
