@@ -12,7 +12,7 @@ The compiled wasm binary and the relevant parts of [./extension][2] are packed i
 
 ### Build and test the extension locally
 
-1. Ensure you have rust & cargo installed.
+1. Ensure you have rust and cargo installed.
 2. Ensure you have node and npm installed.
 3. Checkout this repository
 4. `cd extension/ && npm i`
