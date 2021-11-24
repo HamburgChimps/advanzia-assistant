@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   devtool: 'inline-source-map',
-  entry: './advanzia-assistant.ts',
+  entry: './content-script.ts',
   module: {
     rules: [
       {
@@ -17,7 +17,7 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: 'advanzia-assistant.js',
+    filename: 'content-script.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true
   },

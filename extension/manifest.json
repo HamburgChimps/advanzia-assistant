@@ -10,7 +10,7 @@
         "https://mein.gebuhrenfrei.com/*"
       ],
       "js": [
-        "advanzia-assistant.js"
+        "content-script.js"
       ]
     }
   ],
