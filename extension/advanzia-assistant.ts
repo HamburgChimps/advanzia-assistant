@@ -77,17 +77,17 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
     handleEvent(e: Event | ErrorEvent) {
         switch (e.type) {
             case this.events.instantiateWasm.type:
-            this.init();
-            break;
+                this.init();
+                break;
             case this.events.ready.type:
-            this.status = ContentScriptStatus.Ready;
-            break;
+                this.status = ContentScriptStatus.Ready;
+                break;
             case this.events.done.type:
-            this.status = ContentScriptStatus.Done;
-            break;
+                this.status = ContentScriptStatus.Done;
+                break;
             case this.events.error.type:
-            this.status = ContentScriptStatus.Err;
-            break;
+                this.status = ContentScriptStatus.Err;
+                break;
         }
     }
     
