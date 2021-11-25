@@ -1,11 +1,11 @@
 import './advanzia-assistant';
 import { Script } from './advanzia-assistant';
 
-describe('#ContentScript', () => {
-    it('should do something', async () => {
+describe('Content Script', () => {
+    it('should not do anything if not on transactions page', async () => {
         await new Promise((resolve) => {
             new Script()
-                .on('done', () => resolve(void 0))
+                .on('noop', () => resolve(void 0))
                 .execute();
         });
     });

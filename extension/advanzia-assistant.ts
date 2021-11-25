@@ -5,6 +5,7 @@ export interface ContentScript {
 
 export enum ContentScriptStatus {
     Initializing = "Initializing",
+    Noop = "Noop",
     Ready = "Ready",
     Done = "Done",
     Err = "Error"
@@ -15,6 +16,7 @@ export interface WasmExports extends WebAssembly.Exports {
 };
 
 export interface ContentScriptEvents {
+    readonly noop: Event;
     readonly ready: Event;
     readonly done: Event;
     readonly error: ErrorEvent;
@@ -37,6 +39,7 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
         this.status = ContentScriptStatus.Initializing;
         this.memory = new WebAssembly.Memory({ initial: 10 });
         this.events = {
+            noop: new Event('noop'),
             ready: new Event('ready'),
             done: new Event('done'),
             error: new ErrorEvent('error')
@@ -60,6 +63,9 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
             case this.events.ready.type:
                 this.status = ContentScriptStatus.Ready;
                 break;
+            case this.events.noop.type:
+                this.status = ContentScriptStatus.Noop;
+                break;
             case this.events.done.type:
                 this.status = ContentScriptStatus.Done;
                 break;
@@ -76,7 +82,7 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
 
     async execute() {
         if (location.pathname.indexOf('retail-app') === -1) {
-            this.dispatchEvent(this.events.done);
+            this.dispatchEvent(this.events.noop);
             return;
         }
 
