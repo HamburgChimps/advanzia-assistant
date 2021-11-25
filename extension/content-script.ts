@@ -2,12 +2,13 @@ import { Script } from './advanzia-assistant';
 
 const script = new Script({
     fetch: window.fetch.bind(window),
+    location: window.location,
     chrome,
     wasm: WebAssembly,
     console
 });
 
 script
-    .ready
-    .then(() => script.execute())
-    .catch((e) => console.log({ error: e, status: script.status }));
+    .on('ready', () => script.execute())
+    .on('done', () => console.log('done'))
+    .on('error', (e) => console.log({ errors: script.errors, status: script.status }));
