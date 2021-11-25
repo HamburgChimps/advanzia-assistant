@@ -1,7 +1,13 @@
-import { init } from './advanzia-assistant';
+import { Script } from './advanzia-assistant';
 
-init({
+const script = new Script({
     fetch: window.fetch.bind(window),
+    chrome,
     wasm: WebAssembly,
-    chrome
+    console
 });
+
+script
+    .ready
+    .then(() => script.execute())
+    .catch((e) => console.log({ error: e, status: script.status }));
