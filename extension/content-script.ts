@@ -1,11 +1,13 @@
 import { Script } from './advanzia-assistant';
 
 const script = new Script({
-    fetch: window.fetch.bind(window),
-    location: window.location,
     chrome,
+    console,
+    document,
+    fetch: window.fetch.bind(window),
+    location,
+    MutationObserver,
     wasm: WebAssembly,
-    console
 });
 
 script

@@ -1,9 +1,11 @@
 export interface ContentScriptDeps {
+    readonly chrome: typeof chrome;
     readonly console: typeof console;
+    readonly document: Document,
     readonly fetch: typeof fetch;
     readonly location: typeof window.location;
+    readonly MutationObserver: typeof MutationObserver;
     readonly wasm: typeof WebAssembly;
-    readonly chrome: typeof chrome;
 };
 
 export interface ContentScript {
@@ -35,13 +37,13 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
     private deps: ContentScriptDeps;
     private memory: WebAssembly.Memory;
     private wasmExports?: WasmExports;
-    
+
     private events: ContentScriptEvents;
-    
+
     status: ContentScriptStatus;
-    
+
     errors: Error[];
-    
+
     constructor(deps: ContentScriptDeps) {
         super();
         this.deps = deps;
@@ -53,27 +55,27 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
             done: new Event('done'),
             error: new ErrorEvent('error')
         };
-        
+
         this.errors = [];
-        
+
         this.registerEventListeners();
-        
+
         if (this.deps.location.pathname.indexOf('retail-app') === -1) {
             this.dispatchEvent(this.events.done);
             return;
         }
-        
+
         this.dispatchEvent(this.events.instantiateWasm);
     }
-    
+
     private registerEventListeners() {
         Object.values(this.events).forEach(e => this.registerEventListener(e.type));
     }
-    
+
     private registerEventListener(name: string) {
         this.addEventListener(name, this);
     }
-    
+
     handleEvent(e: Event | ErrorEvent) {
         switch (e.type) {
             case this.events.instantiateWasm.type:
@@ -90,53 +92,53 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
                 break;
         }
     }
-    
+
     on(eventName: string, handler: EventListenerOrEventListenerObject) {
         this.addEventListener(eventName, handler);
         return this;
     }
-    
+
     async init() {
         const wasmResponse = await this.deps.fetch(this.deps.chrome.runtime.getURL('advanzia-assistant.wasm'));
         const wasm = await this.deps.wasm.instantiateStreaming(wasmResponse, { env: { memory: this.memory } });
         this.wasmExports = wasm.instance.exports as WasmExports;
-        
+
         await this.pageReasonablyLoaded();
-        
+
         this.dispatchEvent(this.events.ready);
     }
-    
+
     async execute() {
         if (this.status !== ContentScriptStatus.Ready) {
             this.error(new Error(`Script cannot be executed. Script needs to have ready status but status is ${this.status}`));
         }
-        
+
         this.dispatchEvent(this.events.done);
     }
-    
+
     private error(e: Error) {
         this.errors.push(e);
         this.dispatchEvent(this.events.error);
     }
-    
+
     private pageReasonablyLoaded(): Promise<void> {
         const signalSelector = '.card';
         return new Promise((resolve) => {
-            const el = document.querySelector(signalSelector);
+            const el = this.deps.document.querySelector(signalSelector);
             if (el) {
                 resolve();
                 return;
             }
-            new MutationObserver((mutationsList, observer) => {
-                if (document.querySelector(signalSelector)) {
+            new this.deps.MutationObserver((_mutationsList, observer) => {
+                if (this.deps.document.querySelector(signalSelector)) {
                     resolve();
                     observer.disconnect();
                 }
             })
-            .observe(document.documentElement, {
-                childList: true,
-                subtree: true
-            });
+                .observe(this.deps.document.documentElement, {
+                    childList: true,
+                    subtree: true
+                });
         });
     }
 };
