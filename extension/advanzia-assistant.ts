@@ -1,4 +1,4 @@
-export interface ContentScriptDeps {
+export interface ContentScriptDependencies {
     readonly chrome: typeof chrome;
     readonly console: typeof console;
     readonly document: Document,
@@ -34,7 +34,7 @@ export interface ContentScriptEvents {
 
 
 export class Script extends EventTarget implements ContentScript, EventListenerObject {
-    private deps: ContentScriptDeps;
+    private deps: ContentScriptDependencies;
     private memory: WebAssembly.Memory;
     private wasmExports?: WasmExports;
 
@@ -44,7 +44,7 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
 
     errors: Error[];
 
-    constructor(deps: ContentScriptDeps) {
+    constructor(deps: ContentScriptDependencies) {
         super();
         this.deps = deps;
         this.status = ContentScriptStatus.Initializing;
