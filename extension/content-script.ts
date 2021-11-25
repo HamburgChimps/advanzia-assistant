@@ -1,14 +1,6 @@
 import { Script } from './advanzia-assistant';
 
-const script = new Script({
-    chrome,
-    console,
-    document,
-    fetch: window.fetch.bind(window),
-    location,
-    MutationObserver,
-    wasm: WebAssembly,
-});
+const script = new Script();
 
 script
     .on('ready', () => script.execute())
