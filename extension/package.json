@@ -24,6 +24,6 @@
   },
   "scripts": {
     "build": "webpack",
-    "test": "echo 'No unit tests for the chrome extension content script for now..all good'"
+    "test": "jest"
   }
 }

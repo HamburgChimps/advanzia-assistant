@@ -1,5 +1,4 @@
 export interface ContentScript {
-    init(): void;
     execute(): void;
 };
 
@@ -16,7 +15,6 @@ export interface WasmExports extends WebAssembly.Exports {
 };
 
 export interface ContentScriptEvents {
-    readonly instantiateWasm: Event;
     readonly ready: Event;
     readonly done: Event;
     readonly error: ErrorEvent;
@@ -26,6 +24,7 @@ export interface ContentScriptEvents {
 export class Script extends EventTarget implements ContentScript, EventListenerObject {
     private memory: WebAssembly.Memory;
     private wasmExports?: WasmExports;
+
 
     private events: ContentScriptEvents;
 
@@ -38,7 +37,6 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
         this.status = ContentScriptStatus.Initializing;
         this.memory = new WebAssembly.Memory({ initial: 10 });
         this.events = {
-            instantiateWasm: new Event('instantiatedWasm'),
             ready: new Event('ready'),
             done: new Event('done'),
             error: new ErrorEvent('error')
@@ -47,13 +45,6 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
         this.errors = [];
 
         this.registerEventListeners();
-
-        if (location.pathname.indexOf('retail-app') === -1) {
-            this.dispatchEvent(this.events.done);
-            return;
-        }
-
-        this.dispatchEvent(this.events.instantiateWasm);
     }
 
     private registerEventListeners() {
@@ -66,9 +57,6 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
 
     handleEvent(e: Event | ErrorEvent) {
         switch (e.type) {
-            case this.events.instantiateWasm.type:
-                this.init();
-                break;
             case this.events.ready.type:
                 this.status = ContentScriptStatus.Ready;
                 break;
@@ -86,7 +74,12 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
         return this;
     }
 
-    async init() {
+    async execute() {
+        if (location.pathname.indexOf('retail-app') === -1) {
+            this.dispatchEvent(this.events.done);
+            return;
+        }
+
         const wasmResponse = await fetch(chrome.runtime.getURL('advanzia-assistant.wasm'));
         const wasm = await WebAssembly.instantiateStreaming(wasmResponse, { env: { memory: this.memory } });
         this.wasmExports = wasm.instance.exports as WasmExports;
@@ -94,14 +87,6 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
         await this.pageReasonablyLoaded();
 
         this.dispatchEvent(this.events.ready);
-    }
-
-    async execute() {
-        if (this.status !== ContentScriptStatus.Ready) {
-            this.error(new Error(`Script cannot be executed. Script needs to have ready status but status is ${this.status}`));
-        }
-
-        this.dispatchEvent(this.events.done);
     }
 
     private error(e: Error) {
