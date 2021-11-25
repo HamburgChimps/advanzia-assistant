@@ -37,13 +37,13 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
     private deps: ContentScriptDependencies;
     private memory: WebAssembly.Memory;
     private wasmExports?: WasmExports;
-
+    
     private events: ContentScriptEvents;
-
+    
     status: ContentScriptStatus;
-
+    
     errors: Error[];
-
+    
     constructor(deps: ContentScriptDependencies) {
         super();
         this.deps = deps;
@@ -55,72 +55,72 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
             done: new Event('done'),
             error: new ErrorEvent('error')
         };
-
+        
         this.errors = [];
-
+        
         this.registerEventListeners();
-
+        
         if (this.deps.location.pathname.indexOf('retail-app') === -1) {
             this.dispatchEvent(this.events.done);
             return;
         }
-
+        
         this.dispatchEvent(this.events.instantiateWasm);
     }
-
+    
     private registerEventListeners() {
         Object.values(this.events).forEach(e => this.registerEventListener(e.type));
     }
-
+    
     private registerEventListener(name: string) {
         this.addEventListener(name, this);
     }
-
+    
     handleEvent(e: Event | ErrorEvent) {
         switch (e.type) {
             case this.events.instantiateWasm.type:
-                this.init();
-                break;
+            this.init();
+            break;
             case this.events.ready.type:
-                this.status = ContentScriptStatus.Ready;
-                break;
+            this.status = ContentScriptStatus.Ready;
+            break;
             case this.events.done.type:
-                this.status = ContentScriptStatus.Done;
-                break;
+            this.status = ContentScriptStatus.Done;
+            break;
             case this.events.error.type:
-                this.status = ContentScriptStatus.Err;
-                break;
+            this.status = ContentScriptStatus.Err;
+            break;
         }
     }
-
+    
     on(eventName: string, handler: EventListenerOrEventListenerObject) {
         this.addEventListener(eventName, handler);
         return this;
     }
-
+    
     async init() {
         const wasmResponse = await this.deps.fetch(this.deps.chrome.runtime.getURL('advanzia-assistant.wasm'));
         const wasm = await this.deps.wasm.instantiateStreaming(wasmResponse, { env: { memory: this.memory } });
         this.wasmExports = wasm.instance.exports as WasmExports;
-
+        
         await this.pageReasonablyLoaded();
-
+        
         this.dispatchEvent(this.events.ready);
     }
-
+    
     async execute() {
         if (this.status !== ContentScriptStatus.Ready) {
             this.error(new Error(`Script cannot be executed. Script needs to have ready status but status is ${this.status}`));
         }
-
+        
         this.dispatchEvent(this.events.done);
     }
-
+    
     private error(e: Error) {
         this.errors.push(e);
         this.dispatchEvent(this.events.error);
     }
-
+    
     private pageReasonablyLoaded(): Promise<void> {
         const signalSelector = '.card';
         return new Promise((resolve) => {
@@ -135,10 +135,10 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
                     observer.disconnect();
                 }
             })
-                .observe(this.deps.document.documentElement, {
-                    childList: true,
-                    subtree: true
-                });
+            .observe(this.deps.document.documentElement, {
+                childList: true,
+                subtree: true
+            });
         });
     }
 };
