@@ -13,7 +13,7 @@ cd ..
 
 cd extension
 
-rm -rf transpiled
+rm -rf dist
 
 npm run build
 
