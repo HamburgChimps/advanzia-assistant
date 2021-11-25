@@ -2,7 +2,6 @@ export interface ContentScript {
     execute(): void;
 };
 
-
 export enum ContentScriptStatus {
     Initializing = "Initializing",
     Noop = "Noop",
@@ -21,7 +20,6 @@ export interface ContentScriptEvents {
     readonly done: Event;
     readonly error: ErrorEvent;
 }
-
 
 export class Script extends EventTarget implements ContentScript, EventListenerObject {
     private memory: WebAssembly.Memory;
