@@ -24,8 +24,8 @@ describe('Content Script', () => {
     beforeEach(() => {
         script = new Script()
             .on('noop', setRaised('noop'))
-            .on('ready', () => setRaised('ready'))
-            .on('done', () => setRaised('done'))
+            .on('ready', setRaised('ready'))
+            .on('done', setRaised('done'))
     })
 
     it('should not do anything if executed outside of transactions page', async () => {
