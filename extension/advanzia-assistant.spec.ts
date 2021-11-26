@@ -45,6 +45,7 @@ describe('Content Script', () => {
         });
 
         await script.execute();
+
         expect(eventsRaised.noop).toBe(false);
         expect(eventsRaised.ready).toBe(true);
         expect(eventsRaised.done).toBe(false);
