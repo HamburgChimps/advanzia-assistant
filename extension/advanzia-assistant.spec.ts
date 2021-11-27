@@ -1,5 +1,6 @@
-import FetchMock from 'jest-fetch-mock';
-import * as ChromeMock from 'jest-chrome';
+import * as fs from 'fs';
+import * as chromeMock from 'jest-chrome';
+import { Response } from 'cross-fetch';
 import { ContentScript, Script } from './advanzia-assistant';
 
 describe('Content Script', () => {
@@ -16,9 +17,7 @@ describe('Content Script', () => {
 
     let script: ContentScript;
 
-    beforeAll(FetchMock.enableMocks);
-    beforeAll(() => Object.assign(global, ChromeMock));
-
+    beforeAll(() => Object.assign(global, chromeMock));
     beforeEach(jest.restoreAllMocks);
     beforeEach(resetAllRaised);
     beforeEach(() => {
@@ -43,9 +42,19 @@ describe('Content Script', () => {
             ...window.location,
             ...{ pathname: '/retail-app-de' },
         });
+        global.fetch = async () => new Response(fs.readFileSync('../dist/advanzia-assistant.wasm'));
+
+        const simulateAdvanziaAppDoingStuff = () => setTimeout(() => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            document.body.appendChild(div);
+        }, 2000);
+
+        simulateAdvanziaAppDoingStuff();
 
         await script.execute();
 
+        expect(chrome.runtime.getURL).toBeCalledTimes(1);
         expect(eventsRaised.noop).toBe(false);
         expect(eventsRaised.ready).toBe(true);
         expect(eventsRaised.done).toBe(false);

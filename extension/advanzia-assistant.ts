@@ -84,8 +84,12 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
             return;
         }
 
-        const wasmResponse = await fetch(chrome.runtime.getURL('advanzia-assistant.wasm'));
-        const wasm = await WebAssembly.instantiateStreaming(wasmResponse, { env: { memory: this.memory } });
+        const wasmPath = chrome.runtime.getURL('advanzia-assistant.wasm');
+        const wasmResponse = await fetch(wasmPath);
+
+        const wasmResponseArrayBuffer = await wasmResponse.arrayBuffer();
+
+        const wasm = await WebAssembly.instantiate(wasmResponseArrayBuffer, { env: { memory: this.memory } });
         this.wasmExports = wasm.instance.exports as WasmExports;
 
         await this.pageReasonablyLoaded();
