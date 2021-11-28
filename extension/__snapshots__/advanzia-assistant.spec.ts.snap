@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Content Script when on transactions page to insert correct dom modifications 1`] = `
+exports[`Content Script when run on mein.gebuhrenfrei.com somewhere when on transactions page to insert correct dom modifications 1`] = `
 <body>
   <div
     class="card"
