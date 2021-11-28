@@ -19,6 +19,6 @@ module.exports = {
   output: {
     filename: 'content-script.js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true
+    clean: true,
   },
 };
