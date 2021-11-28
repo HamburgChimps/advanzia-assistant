@@ -19,7 +19,10 @@ The compiled wasm binary and the relevant parts of [./extension][2] are packed i
 5. `cd .. && ./build.sh`
 6. Load the `dist` directory that is now present in the repository root into Chrome as an unpacked extension
 
+To run the tests, execute [`./test.sh`][4]. The tests in [./extension][2] require the existence of the compiled wasm in `dist`, so you will need to have executed [`./build.sh`][3] before executing [`./test.sh`][4].
+
 [0]: <./crate>
 [1]: <https://www.hellorust.com/setup/wasm-target/>
 [2]: <./extension>
 [3]: <./build.sh>
+[4]: <./test.sh>

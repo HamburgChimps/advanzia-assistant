@@ -19,7 +19,7 @@ export interface ContentScriptEvents {
     readonly ready: Event;
     readonly done: Event;
     readonly error: ErrorEvent;
-}
+};
 
 export class Script extends EventTarget implements ContentScript, EventListenerObject {
     private memory: WebAssembly.Memory;
