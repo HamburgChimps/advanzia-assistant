@@ -79,6 +79,11 @@ export class Script extends EventTarget implements ContentScript, EventListenerO
     }
 
     async execute() {
+        if (location.host !== 'mein.gebuhrenfrei.com') {
+            this.error(new Error('this script can only be run on mein.gebuhrenfrei.com'));
+            return;
+        }
+
         if (location.pathname.indexOf('retail-app') === -1) {
             this.dispatchEvent(this.events.noop);
             return;
