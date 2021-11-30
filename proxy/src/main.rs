@@ -2,10 +2,11 @@ use hudsucker::{
     async_trait::async_trait,
     certificate_authority::RcgenAuthority,
     hyper::{Body, Request, Response},
-    *,
+    rustls, HttpContext, HttpHandler, ProxyBuilder, RequestOrResponse,
 };
 
 use log::*;
+use rcgen::*;
 use rustls_pemfile as pemfile;
 use std::net::SocketAddr;
 
@@ -17,6 +18,11 @@ async fn shutdown_signal() {
 
 #[derive(Clone)]
 struct LogHandler {}
+
+struct CAInfo {
+    key: String,
+    cert: String,
+}
 
 #[async_trait]
 impl HttpHandler for LogHandler {
@@ -35,11 +41,35 @@ impl HttpHandler for LogHandler {
     }
 }
 
+fn gen_ca() -> CAInfo {
+    let mut params = CertificateParams::default();
+    let mut dn = DistinguishedName::new();
+    dn.push(DnType::CommonName, "advanzia-assistant-proxy");
+    dn.push(DnType::OrganizationName, "advanzia-assistant-proxy");
+    dn.push(DnType::CountryName, "DE");
+    dn.push(DnType::LocalityName, "HH");
+    params.key_usages = vec![
+        KeyUsagePurpose::DigitalSignature,
+        KeyUsagePurpose::KeyCertSign,
+        KeyUsagePurpose::CrlSign,
+    ];
+    params.is_ca = IsCa::Ca(BasicConstraints::Unconstrained);
+    let cert = Certificate::from_params(params).unwrap();
+    let cert_crt = cert.serialize_pem().unwrap();
+    let key = cert.serialize_private_key_pem();
+
+    CAInfo {
+        key,
+        cert: cert_crt,
+    }
+}
+
 #[tokio::main]
 async fn main() {
     env_logger::init();
-    let mut private_key_bytes: &[u8] = include_bytes!("../key.pem");
-    let mut ca_cert_bytes: &[u8] = include_bytes!("../cert.pem");
+    let ca = gen_ca();
+    let mut private_key_bytes: &[u8] = ca.key.as_bytes();
+    let mut ca_cert_bytes: &[u8] = ca.cert.as_bytes();
     let private_key = rustls::PrivateKey(
         pemfile::pkcs8_private_keys(&mut private_key_bytes)
             .expect("Failed to parse private key")
