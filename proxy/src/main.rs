@@ -8,7 +8,9 @@ use hudsucker::{
 use log::*;
 use rcgen::*;
 use rustls_pemfile as pemfile;
+use std::fs;
 use std::net::SocketAddr;
+use std::path::Path;
 
 async fn shutdown_signal() {
     tokio::signal::ctrl_c()
@@ -67,16 +69,28 @@ fn gen_ca() -> CAInfo {
 #[tokio::main]
 async fn main() {
     env_logger::init();
-    let ca = gen_ca();
-    let mut private_key_bytes: &[u8] = ca.key.as_bytes();
-    let mut ca_cert_bytes: &[u8] = ca.cert.as_bytes();
+
+    if !Path::new("ca.crt").exists() || !Path::new("ca.key").exists() {
+        let ca = gen_ca();
+
+        if let Err(err) = fs::write("ca.crt", ca.cert) {
+            error!("cert file write failed: {}", err);
+        }
+
+        if let Err(err) = fs::write("ca.key", ca.key) {
+            error!("private key file write failed: {}", err);
+        }
+
+        println!("Please add certificate to trusted");;
+    }
+
     let private_key = rustls::PrivateKey(
-        pemfile::pkcs8_private_keys(&mut private_key_bytes)
+        pemfile::pkcs8_private_keys(&mut fs::read("ca.key").unwrap())
             .expect("Failed to parse private key")
             .remove(0),
     );
     let ca_cert = rustls::Certificate(
-        pemfile::certs(&mut ca_cert_bytes)
+        pemfile::certs(fs::read("ca.crt"))
             .expect("Failed to parse CA certificate")
             .remove(0),
     );
