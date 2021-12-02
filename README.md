@@ -1,5 +1,7 @@
 # Advanzia Assistant
 
+> This is a work in progress
+
 A Chrome extension to enhance the Advanzia Bank Gebuehrenfrei Transaction UI using Rust and Typescript.
 
 ## Developer Documentation
