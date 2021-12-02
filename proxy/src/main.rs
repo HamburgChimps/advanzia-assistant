@@ -9,6 +9,7 @@ use log::*;
 use rcgen::*;
 use rustls_pemfile as pemfile;
 use std::fs;
+use std::io::BufReader;
 use std::net::SocketAddr;
 use std::path::Path;
 
@@ -81,11 +82,11 @@ async fn main() {
             error!("private key file write failed: {}", err);
         }
 
-        println!("Please add certificate to trusted");;
+        println!("Please add certificate to trusted");
     }
 
     let private_key = rustls::PrivateKey(
-        pemfile::pkcs8_private_keys(&mut fs::read("ca.key").unwrap())
+        pemfile::pkcs8_private_keys(&mut BufReader::new(fs::read("ca.key").unwrap()))
             .expect("Failed to parse private key")
             .remove(0),
     );
