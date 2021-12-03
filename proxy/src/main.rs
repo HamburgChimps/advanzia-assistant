@@ -38,7 +38,7 @@ impl HttpHandler for LogHandler {
     }
 
     async fn handle_response(&mut self, _ctx: &HttpContext, res: Response<Body>) -> Response<Body> {
-        println!("{:?}", res);
+        println!("hello from: {:?}", res.body());
         res
     }
 }
