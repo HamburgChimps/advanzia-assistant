@@ -33,7 +33,11 @@ impl HttpHandler for TransactionRequestHandler {
         _ctx: &HttpContext,
         req: Request<Body>,
     ) -> RequestOrResponse {
-        println!("{:?}", req.uri());
+        if req.uri().host().unwrap() == "mein.gebuhrenfrei.com"
+            && req.uri().path() == "/api/transaction-manager/client-api/v2/transactions"
+        {
+            println!("{:?}", req.uri().path());
+        }
         RequestOrResponse::Request(req)
     }
 
