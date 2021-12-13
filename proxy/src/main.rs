@@ -19,7 +19,7 @@ async fn shutdown_signal() {
 }
 
 #[derive(Clone)]
-struct LogHandler {}
+struct TransactionRequestHandler {}
 
 struct CAInfo {
     key: String,
@@ -27,18 +27,17 @@ struct CAInfo {
 }
 
 #[async_trait]
-impl HttpHandler for LogHandler {
+impl HttpHandler for TransactionRequestHandler {
     async fn handle_request(
         &mut self,
         _ctx: &HttpContext,
         req: Request<Body>,
     ) -> RequestOrResponse {
-        println!("{:?}", req);
+        println!("{:?}", req.uri());
         RequestOrResponse::Request(req)
     }
 
     async fn handle_response(&mut self, _ctx: &HttpContext, res: Response<Body>) -> Response<Body> {
-        println!("hello from: {:?}", res.body());
         res
     }
 }
@@ -102,7 +101,7 @@ async fn main() {
         .with_addr(SocketAddr::from(([127, 0, 0, 1], 3000)))
         .with_rustls_client()
         .with_ca(ca)
-        .with_http_handler(LogHandler {})
+        .with_http_handler(TransactionRequestHandler {})
         .build();
 
     if let Err(e) = proxy.start(shutdown_signal()).await {
