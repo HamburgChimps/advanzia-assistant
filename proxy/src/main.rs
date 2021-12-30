@@ -36,7 +36,9 @@ impl HttpHandler for TransactionRequestHandler {
         if req.uri().host().unwrap() == "mein.gebuhrenfrei.com"
             && req.uri().path() == "/api/transaction-manager/client-api/v2/transactions"
         {
-            println!("{:?}", req.uri().path());
+            return RequestOrResponse::Response(Response::new(Body::from(include_str!(
+                "../../../data/transactions.json"
+            ))));
         }
         RequestOrResponse::Request(req)
     }
