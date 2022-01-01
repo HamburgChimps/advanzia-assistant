@@ -33,14 +33,33 @@ impl HttpHandler for TransactionRequestHandler {
         _ctx: &HttpContext,
         req: Request<Body>,
     ) -> RequestOrResponse {
-        if req.uri().host().unwrap() == "mein.gebuhrenfrei.com"
-            && req.uri().path() == "/api/transaction-manager/client-api/v2/transactions"
-        {
-            return RequestOrResponse::Response(Response::new(Body::from(include_str!(
-                "../../../data/transactions.json"
-            ))));
+        if req.uri().host().unwrap() != "mein.gebuhrenfrei.com" {
+            return RequestOrResponse::Request(req);
         }
-        RequestOrResponse::Request(req)
+
+        let mocked_response = match req.uri().path() {
+            "/api/transaction-manager/client-api/v2/transactions" => {
+                Some(RequestOrResponse::Response(Response::new(Body::from(
+                    include_str!("../../../data/transactions.json"),
+                ))))
+            }
+            "/api/arrangement-manager/client-api/v2/productsummary/context/arrangements" => {
+                Some(RequestOrResponse::Response(Response::new(Body::from(
+                    include_str!("../../../data/arrangements.json"),
+                ))))
+            }
+            "/api/user-manager/client-api/v2/users/me" => Some(RequestOrResponse::Response(
+                Response::new(Body::from(include_str!("../../../data/me.json"))),
+            )),
+            "/api/access-control/client-api/v2/accessgroups/serviceagreements/context" => {
+                Some(RequestOrResponse::Response(Response::new(Body::from(
+                    include_str!("../../../data/context.json"),
+                ))))
+            }
+            _ => None,
+        };
+
+        mocked_response.unwrap_or(RequestOrResponse::Request(req))
     }
 
     async fn handle_response(&mut self, _ctx: &HttpContext, res: Response<Body>) -> Response<Body> {
